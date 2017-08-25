@@ -3,13 +3,8 @@
   <!-- Setup Configuration -->
   <?define ProductName = "Town Crier" ?>
   <?define ProductManufacturer = "Manufacturer" ?>
-  <?define ProductVersion = "1.0.0.0" ?>
+  <?define ProductVersion="!(bind.FileVersion.TownCrierService)" ?>  
   <?define ProductUpgradeCode = "1EDA31EB-9A5A-4A4D-BC07-0CFD1D082404" ?>
 
-  <!-- Setup UI -->
-  <?define BannerBmpPath = \psffp02\DFS_Builds\Installation\Common\Miscellaneous\Wix_PSF_Banner8.bmp" ?>
-  <?define DialogBmpPath = "\psffp02\DFS_Builds\Installation\Common\Miscellaneous\Wix_PSF_Dialog.bmp" ?>
-  <?define IconPath = \\psffp02\DFS_Builds\Financials Logos & Icons\New program icons\PSF.ico" ?>
-  <?define BootstrapIconPath = "\psffp02\DFS_Builds\Financials Logos & Icons\New logo images\LogoFile.png" ?>
 </Include>
 

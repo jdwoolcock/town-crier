@@ -2,8 +2,9 @@
 using System.Configuration;
 using System.Timers;
 using Topshelf;
+using Topshelf.Logging;
 
-namespace TestInstaller
+namespace TownCrier
 {
     class Program
     {
@@ -16,17 +17,19 @@ namespace TestInstaller
 
         public class TownCrier
         {
-            readonly Timer _timer;
+            static readonly LogWriter log = HostLogger.Get<TownCrier>();
+
+            readonly Timer timer;
             public TownCrier()
             {
                 ServiceSettings settings = (dynamic)ConfigurationManager.GetSection("serviceSettings");
                 var message = settings.Message;
 
-                _timer = new Timer(settings.IntervalMs) { AutoReset = true };
-                _timer.Elapsed += (sender, eventArgs) => Console.WriteLine($"It is {DateTimeOffset.Now} and {message}");
+                timer = new Timer(settings.IntervalMs) { AutoReset = true };
+                timer.Elapsed += (sender, eventArgs) => log.Debug($"It is {DateTimeOffset.Now} and {message}");
             }
-            public void Start() { _timer.Start(); }
-            public void Stop() { _timer.Stop(); }
+            public void Start() { timer.Start(); }
+            public void Stop() { timer.Stop(); }
         }
 
         static void Main(string[] args)
@@ -34,27 +37,29 @@ namespace TestInstaller
             Console.ForegroundColor = ConsoleColor.Cyan;
             
 
-            HostFactory.Run(x =>                                    //1
+            HostFactory.Run(x =>
             {
-                x.Service<TownCrier>(s =>                           //2
+                
+
+                
+
+                x.Service<TownCrier>(s =>                           
                 {
-                    s.ConstructUsing(name => new TownCrier());      //3
-                    s.WhenStarted(tc => tc.Start());                //4
-                    s.WhenStopped(tc => tc.Stop());                 //5
+                    s.ConstructUsing(name => new TownCrier());      
+                    s.WhenStarted(tc => tc.Start());                
+                    s.WhenStopped(tc => tc.Stop());                 
                 });
-                x.RunAsLocalSystem();                               //6
+                x.RunAsLocalSystem();
 
-                x.SetDescription("Sample Topshelf Host");           //7
-                x.SetDisplayName("Stuff");                          //8
-                x.SetServiceName("Stuff");                          //9
+                
+                x.SetDescription("Town Crier");
+                x.SetDisplayName("Town Crier");
+                // You just have to make sure that service name in wix file exactly match service name in call to topshelf's SetServiceName().
+                x.SetServiceName("Town Crier");
+                x.UseLog4Net("log4net.config");
             });
-
-
             
-            
-
-            
-            Console.ReadKey();
+            Console.Read();
         }
     }
 }
